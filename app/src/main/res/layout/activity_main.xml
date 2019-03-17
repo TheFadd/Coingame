@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/name_of_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Star Game"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/square_1_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/square_2_1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/square_3_1"
+        app:layout_constraintEnd_toStartOf="@+id/square_2_2"
+        />
+
+
+    <ImageView
+        android:id="@+id/square_2_2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/square_3_2"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/square_2_3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/square_3_3"
+        app:layout_constraintStart_toEndOf="@+id/square_2_2" />
+
+    <ImageView
+        android:id="@+id/square_3_1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toStartOf="@+id/square_3_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    <ImageView
+        android:id="@+id/square_3_2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:id="@+id/square_3_3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/square_3_2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/square_1_1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/square_2_1"
+        app:layout_constraintEnd_toStartOf="@+id/square_1_2" />
+
+    <ImageView
+        android:id="@+id/square_1_2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/square_2_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/square_1_3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/square"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/square_2_3"
+        app:layout_constraintStart_toEndOf="@+id/square_1_2" />
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/square_3_2"
+        android:layout_alignLeft="@id/square_3_2"
+        android:layout_marginTop="16dp"
+        android:text="0"
+        android:textSize="32sp"
+        app:layout_constraintTop_toBottomOf="@+id/square_3_2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/count"
+        android:layout_alignLeft="@id/count"
+        android:layout_marginTop="16dp"
+        android:text="Start"
+        app:layout_constraintTop_toBottomOf="@+id/count"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+</android.support.constraint.ConstraintLayout>

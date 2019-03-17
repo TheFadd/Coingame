@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Coin Game</string>
+    <string name="game_over">Game Over! Click Ok to play again</string>
+    <string name="ok">Ok</string>
+</resources>
