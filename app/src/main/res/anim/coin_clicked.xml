@@ -2,7 +2,6 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="600"
     android:fillAfter="false"
-    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
    >
 
     <scale
@@ -14,7 +13,7 @@
         android:toYScale="0.2" />
 
     <translate
-        android:fromYDelta="10%p"
+        android:fromYDelta="2%p"
         android:toYDelta="90%p" />
 
     <alpha

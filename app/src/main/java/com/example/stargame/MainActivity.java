@@ -1,5 +1,6 @@
 package com.example.stargame;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,215 +12,166 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView square_1_1;
-    private ImageView square_1_2;
-    private ImageView square_1_3;
-    private ImageView square_2_1;
-    private ImageView square_2_2;
-    private ImageView square_2_3;
-    private ImageView square_3_1;
-    private ImageView square_3_2;
-    private ImageView square_3_3;
-    private ImageView currentSquare;
-    private Button startButton;
-    private TextView countView;
+    private static final int MAX_NUMBER_OF_COLOR = 3;
 
-    private int count = 0;
-    final private int minNumberOfRandom = 1;
-    final private int maxNumberOfColor = 3;
-    final private int maxNumberOfSquare = 9;
-    boolean terminateThread = true;
+    private ImageView currentSquare;
+    private Button    startButton;
+    private TextView  countView;
+
+    private int count;
+
+    private volatile boolean isGameTerminated;
+
+    private final List<ImageView> squares = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startParams();
+        initViews();
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startButton.setVisibility(View.GONE);
-                unterminateTread();
-                recfunc();
+                startGame();
             }
         });
-
     }
 
-    private void recfunc() {
-
-        Thread run = new Thread(new Runnable() {
+    private void startGame() {
+        startButton.setVisibility(View.GONE);
+        isGameTerminated = false;
+        Thread thread = new Thread(new Runnable() {
 
             @Override
             public void run() {
-                while (!terminateThread) {
+                while (!isGameTerminated) {
                     try {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                defaultParamsForSquares();
-                                int colorName = getStar();
-                                currentSquare = getSquare();
-
-                                final int resourseId = checkColor(colorName); // силка на coin
-
-                                currentSquare.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Animation coinRiseAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.coin_clicked);
-                                        currentSquare.startAnimation(coinRiseAnimation);
-                                        if (resourseId == R.drawable.ic_silver_coin) {
-                                            count = count + 1;
-                                        }
-                                        if (resourseId == R.drawable.ic_gold_coin) {
-                                            count = count + 2;
-                                        }
-                                        if (resourseId == R.drawable.ic_red_coin) {
-                                            count = count - 3;
-                                        }
-                                        checkPoints();
-                                        countView.setText(Integer.toString(count));
-                                        view.setOnClickListener(null);//Remove setOnClickListener
-                                    }
-                                });
-                            }
-                        });
-                        Thread.sleep(1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                defaultParamsForSquares();
-                            }
-                        });
-                        Thread.sleep(1000); //1000 - 1 сек
-
-                    } catch (InterruptedException ex) {
+                        processThread();
+                    } catch (InterruptedException ignored) {
                     }
                 }
             }
         });
-        run.start(); // заводим
+        thread.start(); // заводим
     }
 
+    private void processThread() throws InterruptedException {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resetViewsToDefault();
+                currentSquare = getSquare();
 
-    private void startParams() {
+                final SquareProperty property = getSquareProperty(); // силка на coin
+
+                currentSquare.setImageResource(property.getImageRes());
+                Animation shakeAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake);
+                currentSquare.startAnimation(shakeAnimation);
+
+                currentSquare.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Animation riseAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.coin_clicked);
+                        currentSquare.startAnimation(riseAnimation);
+                        addPoints(property.getPoints());
+                        countView.setText(String.valueOf(count));
+                        view.setOnClickListener(null); // remove click listener
+                    }
+                });
+            }
+        });
+        Thread.sleep(1000);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resetViewsToDefault();
+            }
+        });
+        Thread.sleep(1000); //1000 - 1 сек
+    }
+
+    @SuppressLint("CutPasteId")
+    private void initViews() {
+        ImageView square_1_1 = findViewById(R.id.square_1_1);
+        ImageView square_1_2 = findViewById(R.id.square_1_2);
+        ImageView square_1_3 = findViewById(R.id.square_1_3);
+        ImageView square_2_1 = findViewById(R.id.square_2_1);
+        ImageView square_2_2 = findViewById(R.id.square_2_2);
+        ImageView square_2_3 = findViewById(R.id.square_2_3);
+        ImageView square_3_1 = findViewById(R.id.square_3_1);
+        ImageView square_3_2 = findViewById(R.id.square_3_2);
+        ImageView square_3_3 = findViewById(R.id.square_3_3);
+
+        squares.add(square_1_1);
+        squares.add(square_1_2);
+        squares.add(square_1_3);
+        squares.add(square_2_1);
+        squares.add(square_2_2);
+        squares.add(square_2_3);
+        squares.add(square_3_1);
+        squares.add(square_3_2);
+        squares.add(square_3_3);
 
         currentSquare = findViewById(R.id.square_1_1);
-        square_1_1 = findViewById(R.id.square_1_1);
-        square_1_2 = findViewById(R.id.square_1_2);
-        square_1_3 = findViewById(R.id.square_1_3);
-        square_2_1 = findViewById(R.id.square_2_1);
-        square_2_2 = findViewById(R.id.square_2_2);
-        square_2_3 = findViewById(R.id.square_2_3);
-        square_3_1 = findViewById(R.id.square_3_1);
-        square_3_2 = findViewById(R.id.square_3_2);
-        square_3_3 = findViewById(R.id.square_3_3);
         countView = findViewById(R.id.count);
         startButton = findViewById(R.id.start_button);
-
     }
 
     private ImageView getSquare() {
-
-        int numberOfSquare = minNumberOfRandom + (int) (Math.random() * maxNumberOfSquare);//номер square
-        ImageView iv = findViewById(R.id.square_1_1);
-        if (numberOfSquare == 1) iv = square_1_1;
-        if (numberOfSquare == 2) iv = square_1_2;
-        if (numberOfSquare == 3) iv = square_1_3;
-        if (numberOfSquare == 4) iv = square_2_1;
-        if (numberOfSquare == 5) iv = square_2_2;
-        if (numberOfSquare == 6) iv = square_2_3;
-        if (numberOfSquare == 7) iv = square_3_1;
-        if (numberOfSquare == 8) iv = square_3_2;
-        if (numberOfSquare == 9) iv = square_3_3;
-        return iv;
-
+        int numberOfSquare = (int) (Math.random() * squares.size()) + 1; // square index [1,9]
+        return squares.get(numberOfSquare - 1);
     }
 
-    private void defaultParamsForSquares() {
-
-        currentSquare.setClickable(false);
-        square_1_1.setImageResource(R.drawable.square);
-        square_1_2.setImageResource(R.drawable.square);
-        square_1_3.setImageResource(R.drawable.square);
-        square_2_1.setImageResource(R.drawable.square);
-        square_2_2.setImageResource(R.drawable.square);
-        square_2_3.setImageResource(R.drawable.square);
-        square_3_1.setImageResource(R.drawable.square);
-        square_3_2.setImageResource(R.drawable.square);
-        square_3_3.setImageResource(R.drawable.square);
-
-    }
-
-    private int getStar() {
-
-        int numberOfColor = minNumberOfRandom + (int) (Math.random() * maxNumberOfColor);
-        return numberOfColor;
-
-    }
-
-    private int checkColor(int colorName) {
-
-        int resourseId = 0;
-        Animation shakeAnimation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake);
-        currentSquare.startAnimation(shakeAnimation);
-        if (colorName == 1) {
-            currentSquare.setImageResource(R.drawable.ic_silver_coin);
-            resourseId = R.drawable.ic_silver_coin;
+    private void resetViewsToDefault() {
+        for (ImageView iv : squares) {
+            iv.setOnClickListener(null);
+            iv.setImageResource(R.drawable.square);
         }
-        if (colorName == 2) {
-            resourseId = R.drawable.ic_gold_coin;
-            currentSquare.setImageResource(R.drawable.ic_gold_coin);
-        }
-        if (colorName == 3) {
-            resourseId = R.drawable.ic_red_coin;
-            currentSquare.setImageResource(R.drawable.ic_red_coin);
-        }
-        return resourseId;
-
     }
 
-    private void checkPoints() {
+    private SquareProperty getSquareProperty() {
+        int index = (int) (Math.random() * MAX_NUMBER_OF_COLOR) + 1; // coin index [1,3]
+        if (index == 1) {
+            return new SquareProperty(R.drawable.ic_silver_coin, 1);
+        } else if (index == 2) {
+            return new SquareProperty(R.drawable.ic_gold_coin, 2);
+        } else if (index == 3) {
+            return new SquareProperty(R.drawable.ic_red_coin, -3);
+        } else {
+            throw new IllegalStateException("Invalid index");
+        }
+    }
 
+    private void addPoints(int toAdd) {
+        count += toAdd;
         if (count < 0) {
-            terminateTread();
+            terminateThread();
             showDialog();
         }
-
     }
 
     private void showDialog() {
-
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage(R.string.game_over);
         alert.setCancelable(false);
         alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 count = 0;
-                countView.setText(Integer.toString(count));
+                countView.setText(String.valueOf(count));
                 startButton.setVisibility(View.VISIBLE);
             }
         });
         AlertDialog alertDialog = alert.create();
         alertDialog.show();
-
     }
 
-    private void terminateTread() {
-
-        terminateThread = true;
-
-    }
-
-    private void unterminateTread() {
-
-        terminateThread = false;
-
+    private void terminateThread() {
+        isGameTerminated = true;
     }
 }
